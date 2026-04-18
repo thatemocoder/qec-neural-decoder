@@ -1,0 +1,10 @@
+data/
+models/
+results/
+figures/
+*.pickle
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+decoder_training.ipynb
+surface_code_data_generation.ipynb

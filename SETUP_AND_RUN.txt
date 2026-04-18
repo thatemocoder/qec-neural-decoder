@@ -1,0 +1,188 @@
+# SETUP & RUN INSTRUCTIONS
+# Windows + VS Code + GitHub
+# ============================================================
+
+
+# ============================================================
+# PART 1 — FOLDER STRUCTURE ON YOUR LAPTOP
+# ============================================================
+
+You do NOT need to create any folders manually.
+Every notebook creates the folders it needs automatically.
+The only folder you need to create manually is the project root folder itself.
+
+Step 1: Create your project folder anywhere on your laptop, for example:
+    C:\Users\YourName\Documents\qec-decoder
+
+Step 2: Copy all 7 files into that folder:
+    01_data_generation.ipynb
+    02_decoder_training.ipynb
+    03_noise_sweep.ipynb
+    04_pymatching_benchmark.ipynb
+    05_lstm_decoder.ipynb
+    06_comparison_figures.ipynb
+    README.md
+
+That is it. When you run the notebooks, they will automatically create:
+    data/
+    data/sweep/
+    models/
+    results/
+    figures/
+
+
+# ============================================================
+# PART 2 — INSTALL DEPENDENCIES
+# ============================================================
+
+Open a terminal in VS Code (Terminal → New Terminal) and run:
+
+    pip install stim numpy matplotlib scikit-learn pymatching
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
+
+The PyTorch line installs the CUDA 12.1 version for your RTX GPU.
+If you are unsure whether CUDA is working, run this after installing:
+
+    python -c "import torch; print(torch.cuda.is_available())"
+
+It should print: True
+
+
+# ============================================================
+# PART 3 — HOW TO RUN THE NOTEBOOKS
+# ============================================================
+
+Open VS Code, then File → Open Folder → select your project folder.
+Open each notebook by clicking it in the Explorer panel on the left.
+
+Run each notebook in order. For each one:
+    1. Click "Run All" at the top of the notebook  (or press Ctrl+Alt+R)
+    2. Wait for it to finish — all cells show a green tick
+    3. Move to the next notebook
+
+EXPECTED TIMES ON YOUR RTX GPU:
+    Notebook 01 — ~2 minutes   (data generation + sweep)
+    Notebook 02 — ~2 minutes   (MLP training)
+    Notebook 03 — ~30 seconds  (sweep evaluation)
+    Notebook 04 — ~3 minutes   (MWPM sweep, CPU-only)
+    Notebook 05 — ~3 minutes   (LSTM training + sweep)
+    Notebook 06 — ~2 minutes   (all figures)
+
+TOTAL: roughly 12–15 minutes end to end.
+
+After notebook 06, your figures/ folder will contain 6 PNG files.
+These are the presentation figures.
+
+
+# ============================================================
+# PART 4 — GITHUB SETUP (WINDOWS + VS CODE)
+# ============================================================
+
+--- Step A: Install Git ---
+
+Download from: https://git-scm.com/download/win
+Run the installer with all default settings.
+After install, restart VS Code.
+
+--- Step B: Configure Git (one time only) ---
+
+Open VS Code terminal and run:
+
+    git config --global user.name "Your Name"
+    git config --global user.email "your@email.com"
+
+--- Step C: Create a GitHub account ---
+
+Go to https://github.com and sign up if you do not have an account.
+
+--- Step D: Create a new repository on GitHub ---
+
+1. Click the + button top right → New repository
+2. Repository name: qec-neural-decoder  (or any name you want)
+3. Set to Public (your mentor can see it) or Private
+4. DO NOT tick "Add a README" — you already have one
+5. Click "Create repository"
+6. GitHub shows you the repository URL, e.g.:
+       https://github.com/yourusername/qec-neural-decoder.git
+   Copy this URL.
+
+--- Step E: Create a .gitignore file ---
+
+In VS Code terminal, inside your project folder, run:
+
+    echo data/ > .gitignore
+    echo models/ >> .gitignore
+    echo results/ >> .gitignore
+    echo __pycache__/ >> .gitignore
+    echo .ipynb_checkpoints/ >> .gitignore
+
+This tells Git to NOT upload the large .npy and .pt files (data + trained models).
+GitHub has a 100MB file limit — the .npy files would exceed it.
+Your mentor can reproduce everything by running the notebooks.
+
+Your .gitignore will look like:
+    data/
+    models/
+    results/
+    __pycache__/
+    .ipynb_checkpoints/
+
+--- Step F: Initialise and push ---
+
+In VS Code terminal, run these commands one at a time:
+
+    git init
+    git add .
+    git commit -m "Initial commit — QEC neural network decoder project"
+    git branch -M main
+    git remote add origin https://github.com/yourusername/qec-neural-decoder.git
+    git push -u origin main
+
+Replace the URL with your own from Step D.
+
+When prompted, sign in to GitHub via the browser window that opens.
+
+--- Step G: Verify ---
+
+Go to https://github.com/yourusername/qec-neural-decoder in your browser.
+You should see all 6 notebooks, the README, and the .gitignore.
+
+The figures/ folder will NOT be there yet because you need to run
+notebook 06 first and then add figures separately:
+
+    git add figures/
+    git commit -m "Add presentation figures"
+    git push
+
+
+# ============================================================
+# PART 5 — UPDATING THE REPO AFTER RUNNING NOTEBOOKS
+# ============================================================
+
+Every time you make a change and want to update GitHub:
+
+    git add .
+    git commit -m "Describe what changed"
+    git push
+
+That is the full workflow. Three commands every time.
+
+
+# ============================================================
+# PART 6 — WHAT TO SHARE WITH YOUR MENTOR
+# ============================================================
+
+Share this link: https://github.com/yourusername/qec-neural-decoder
+
+The README on that page summarises:
+  - What the project does
+  - The results table
+  - How to run it
+  - The folder structure
+  - Key design decisions and why
+
+If your mentor wants to run it themselves:
+  git clone https://github.com/yourusername/qec-neural-decoder.git
+  cd qec-neural-decoder
+  pip install stim pymatching torch numpy matplotlib scikit-learn
+  # then run notebooks 01–06 in order
